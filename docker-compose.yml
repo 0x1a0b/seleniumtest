@@ -5,10 +5,14 @@ services:
     build: nightwatch
     ports:
       - "5000:5000"
+    depends_on:
+      - node-chrome
+      - selenium-hub
+      - video-chrome
     volumes:
       - ./scripts:/scripts
 
-  hub:
+  selenium-hub:
     image: selenium/hub:4
     environment:
       GRID_BROWSER_TIMEOUT: "120000"
@@ -21,6 +25,19 @@ services:
   node-chrome:
     image: selenium/node-chrome:4
     environment:
-      SE_EVENT_BUS_HOST: "hub"
+      SE_EVENT_BUS_HOST: "selenium-hub"
       SE_EVENT_BUS_PUBLISH_PORT: "4442"
       SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
+    ports:
+      - "6900:5900"
+
+  # video only gets closed once the containers exits
+  video-chrome:
+    image: selenium/video:ffmpeg-4.3.1-20210426
+    depends_on:
+      - node-chrome
+    volumes:
+      - ./videos:/videos
+    environment:
+      DISPLAY_CONTAINER_NAME: node-chrome
+      FILE_NAME: chrome_video.mp4

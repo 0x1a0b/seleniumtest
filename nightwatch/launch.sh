@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-sleep 20
+sleep 16
 
 nightwatch -c /scripts/nightwatch.json
 
