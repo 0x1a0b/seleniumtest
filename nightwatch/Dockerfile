@@ -1,7 +1,10 @@
 FROM alpine:latest
 
+COPY launch.sh /opt/launch.sh
+
 RUN apk add --update nodejs-npm && \
     npm install -g nightwatch && \
-    rm -rf /tmp/* /root/.npm
+    rm -rf /tmp/* /root/.npm && \
+    chmod a+rx /opt/launch.sh
 
-CMD nightwatch -c /scripts/nightwatch.json
+CMD /opt/launch.sh
