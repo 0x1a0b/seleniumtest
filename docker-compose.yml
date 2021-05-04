@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  nightwatch:
+    build: nightwatch
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./scripts:/scripts
+
+  hub:
+    image: selenium/hub:3.141.59
+      environment:
+        GRID_BROWSER_TIMEOUT: 120000
+        GRID_NEW_SESSION_WAIT_TIMEOUT: 8000
+        GRID_NODE_POLLING: 300
+        GRID_TIMEOUT: 120000
+      ports:
+        - '4444:4444'
+
+  node-chrome:
+    image: selenium/node-chrome:90.0
+    environment:
+      HUB_PORT_4444_TCP_ADDR: hub
+      HUB_PORT_4444_TCP_PORT: 4444
